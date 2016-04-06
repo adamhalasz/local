@@ -1,5 +1,7 @@
 # Local
-Localization library for node.js
+### Asynchronous localization library for node.js
+
+![Build Status](https://travis-ci.org/adamhalasz/local.svg?branch=master)
 
 ```js
 var Local = require('local')
@@ -92,7 +94,7 @@ local.get('hello').in('spanish') // -> hola
 ### Locale
 
 **API**
-```js
+```
 var locale = local.locale($language)
     locale($query).then($successCallback).catch($errorCallback)
 ```
@@ -106,8 +108,8 @@ spanish('hello').then(function(value){
 	
 }).catch(function(error){
 	console.error(error)
-	
 }) 
+     
 ```
 
 ### Storage
@@ -119,7 +121,7 @@ var local = new Local()
 
 // fileSystem
 var local = new Local()
-    local.storeTo('fileSystem', '/your/custom/path/local.json')
+local.storeTo('fileSystem', '/your/custom/path/local.json')
 ```
 
 #### Custom Storage
