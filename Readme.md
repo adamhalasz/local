@@ -121,10 +121,6 @@ function storageDriver(Local, options, finish){
 	var memory = Local.memory
 	var storage = Local.storage('customStorage')
 	
-	storage.init(function(done){
-		// ...
-	})
-	
 	storage.getter(function(parent, query, language, translation, done){
 		// ...
 	})

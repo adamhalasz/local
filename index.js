@@ -48,10 +48,6 @@
 		this.parent._get = callback;
 		return this;
 	}
-	Storage.prototype.init = function(callback){
-		this.parent._init = callback;
-		return this;
-	}
 	Local.prototype.storage = function storageDriver(storageName){
 		return new Storage(storageName, this)
 	}
