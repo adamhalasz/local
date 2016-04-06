@@ -77,8 +77,9 @@ local
 
 
 ## Tests
-Running the tests (mocha) is as simple as typing in:
+Tests are written with Mocha.js. To run the tests install mocha and run the tests with npm test.  
 ```
+npm install mocha -g
 npm test
 ```
 
