@@ -15,9 +15,11 @@ describe('Test with Memory Driver', function(){
 	it('should save translation into memory', function(done){
 		var local = new Local()
 		local.ready(function(error){
-			local.set('hello').to('hola').in('spanish')
-			expect(local.memory['hello']['spanish']).to.be('hola')
-			done()
+			local.set('hello').to('hola').in('spanish').then(function(){
+				expect(local.memory['hello']['spanish']).to.be('hola')
+				done()
+			})
+			
 		})
 	})
 	

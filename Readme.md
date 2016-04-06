@@ -1,24 +1,33 @@
-# Local.js
+# Local
 Localization library for node.js
 
 ```js
 var Local = require('local')
 var local = new Local()
-	local.ready(set)
+local.ready(SET)
 
-function set(){
-	local.set('hello').to('hola').in('spanish').then(get).catch(error)
+function SET(){
+	local
+	.set('HELLO')
+	.in('SPANISH')
+	.to('HOLA')
+	.catch(errors)
+	.then(GET)
 }
 
-function get(){
-	local.get('hello').in('spanish').then(show).catch(error)
+function GET(){
+	local
+	.get('HELLO')
+	.in('SPANISH')
+	.catch(errors)
+	.then(DISPLAY)
 }
 
-function show(translation){
-	console.log(translation) // -> hola
+function DISPLAY(translation){
+	console.log(translation) // -> HOLA
 }
 
-function error(err){
+function errors(err){
 	console.error(err)
 }
 ```

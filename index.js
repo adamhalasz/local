@@ -105,28 +105,30 @@
 	Set.prototype.run = function(){
 		var parent = this.parentClass;
 		var scope = this;
-		
-		parent._set(parent, scope.query, scope.language, scope.translation, function(error, response){
-			if(error) {
-				if(scope._catch) {
-					scope._catch(error)
-				} else {
-					throw error;
+		process.nextTick(function(){
+			parent._set(parent, scope.query, scope.language, scope.translation, function(error, response){
+				if(error) {
+					if(scope._catch) {
+						scope._catch(error)
+					} else {
+						throw error;
+					}
+				} else if (scope._then) {
+					scope._then(response)
 				}
-			} else if (scope._then) {
-				scope._then(response)
-			}
+			})
 		})
-		
 		return this.parentClass;
 	}
 	
 	Set.prototype.then = function(callback){
 		this._then = callback;
+		return this;
 	}
 	
 	Set.prototype.catch = function(callback){
 		this._catch = callback;
+		return this;
 	}
 	
 // ====================================================
@@ -167,10 +169,12 @@
 	
 	Get.prototype.then = function(callback){
 		this._then = callback;
+		return this;
 	}
 	
 	Get.prototype.catch = function(callback){
 		this._catch = callback;
+		return this;
 	}
 
 // ====================================================
