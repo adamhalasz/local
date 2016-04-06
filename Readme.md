@@ -1,33 +1,86 @@
 # Local
 Beautiful localization library for node.js. 
 
-```
-// require local
+```js
 var Local = require('local')
 
-// create local instance
-var local = new Local('/your/dir/local.json')
+var local = new Local()
+	local.set('hello').to('hola').in('spanish')
+	local.get('hello').in('spanish') // -> hola
+```
 
-// set: define "hello" as "hello" in spanish
-local.set('hello').in('es').as('hola')
-
-// get "hello" in spanish
-local.get('hello').in('es') // -> hola
+## Install
+```
+npm install local
 ```
 
 ## Features
-- JSON File Storage
-- Stores JSON in memory
-- Save Translation
-- Query Translation
+- Ships with JSON Memory and FileStorage (for node.js) Drivers
+- Simple Get/Set API
+- Easy Instantiation for User Level Localization
+- Custom Storage Setter/Getter API
 
-## API
+## How to Use
 
-### new Local(*filePath*)
-### .set(*baseLocale*)
-### .get(*baseLocale*)
-### .in(*lang*)
-### .as(*lang*)
+### Initialize
+
+#### With Memory Storage
+```js
+var Local = require('local')
+var local = new Local() // leave it empty
+```
+
+#### With FileSystem Storage
+```js
+var Local = require('local')
+var local = new Local('/your/file/local.json')
+```
+
+#### With Custom Storage
+```js
+var Local = require('local')
+
+// register custom storage
+Local
+.storage('myStorage')
+.getter(function(parent, query, language, translation, done){
+	// ...
+	done()
+})
+.setter(function(parent, query, language, done){
+	// ...
+	done()
+})
+
+// instantiate
+var local = new Local('myStorage')
+```
+
+### Set
+```js
+local
+.set('hello')
+.to('hola')
+.in('spanish')
+.then(successCallback) // one result argument
+.catch(errorCallback) // one error argument
+```
+
+### Get
+```js
+local
+.get('hello')
+.in('spanish')
+.then(successCallback) // one result argument
+.catch(errorCallback) // one error argument
+```
+
+
+## Tests
+Running the tests (mocha) is as simple as typing in:
+```
+npm test
+```
 
 ## License
 The MIT License (MIT)

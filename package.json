@@ -1,0 +1,12 @@
+{
+  "name": "local",
+  "description": "Beautiful localization library for node.js",
+  "version": "v0.1.0",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.2"
+  },
+  "license": "MIT"
+}
