@@ -6,7 +6,7 @@ module.exports = function(Local, path, finish){
 		if(error && error.code == 'ENOENT'){
 			fs.writeFile(path, '{}', function(error){
 				if(error) finish.apply(this, arguments)
-				udpateMemory({})
+				udpateMemory()
 			})
 		} else if (error) {
 			if(error) finish.apply(this, arguments)
@@ -16,7 +16,7 @@ module.exports = function(Local, path, finish){
 		}
 		
 		function udpateMemory(response){
-			Local.memory = response;
+			Local.memory = response ? response : Local.memory ;
 			finish(null, Local.memory)
 		}
 	})

@@ -26,6 +26,5 @@ module.exports = function(Local, options, finish){
 		}
 	})
 	
-	Local.memory = {};
 	finish(null, Local.memory)
 }

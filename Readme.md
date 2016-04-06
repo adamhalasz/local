@@ -15,9 +15,9 @@ npm install local
 ```
 
 ## Features
-- Ships with JSON Memory and FileStorage (for node.js) Drivers
-- Simple Get/Set API
-- Easy Instantiation for User Level Localization
+- Ships with JSON Memory and FileStorage Drivers
+- Human Readable Get/Set API
+- Easy Locale Instantiation for Dynamic Localization
 - Custom Storage Setter/Getter API
 
 ## How to Use
@@ -25,9 +25,14 @@ npm install local
 ### Initialize
 ```js
 var Local = require('local')
+var local = new Local()
 ```
 
 ### Set
+**API**
+> local.set(*originValue*).to(*translatedValue*).in(*language*)
+
+**Example**
 ```js
 local
 .set('hello')
@@ -38,6 +43,11 @@ local
 ```
 
 ### Get
+
+**API**
+> local.set(*query*).in(*language*)
+
+**Example**
 ```js
 local
 .get('hello')
@@ -47,42 +57,57 @@ local
 ```
 
 ### Locale
+
+**API**
+> var locale = local.locale(*language*)
+> locale(*query*)
+
+**Example**
 ```js
-var locale = local.locale('spanish')
-locale('hello') -> hola
+var spanish = local.locale('spanish')
+spanish('hello') // -> hola
 ```
 
 ### Storage
-#### Use Memory Storage
-Memory is always used.
+
+#### Defaults
 ```js
+// memory
 var local = new Local() 
-```
 
-#### Use FileSystem Storage
-```js
-var local = new Local() // first argument should be a path
-	local.storeTo('fileSystem', '/your/file/local.json')
-```
-
-#### Use Custom Storage
-```js
-// register custom storage
-Local
-.storage('myStorage')
-.init(function(done){
-	// ...
-})
-.getter(function(parent, query, language, translation, done){
-	// ...
-})
-.setter(function(parent, query, language, done){
-	// ...
-})
-
-// instantiate
+// fileSystem
 var local = new Local()
-	local.storeTo('myStorage') // first argument is not empty but not a path
+local.storeTo('fileSystem', '/your/custom/path/local.json')
+```
+
+#### Custom Storage
+```js
+// custom storage driver
+function storageDriver(Local, options, finish){
+	var error = null
+	var memory = Local.memory
+	var storage = Local.storage('customStorage')
+	
+	storage.init(function(done){
+		// ...
+	})
+	
+	storage.getter(function(parent, query, language, translation, done){
+		// ...
+	})
+	
+	storage.setter(function(parent, query, language, done){
+		// ...
+	})
+		
+	finish(error, memory)
+}
+
+// initialize
+var local = new Local()
+
+// load the new driver into this local instance
+local.storeTo(storageDriver)
 ```
 
 
