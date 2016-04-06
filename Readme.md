@@ -1,12 +1,17 @@
 # Local
-Beautiful localization library for node.js. 
+Localization library for node.js
 
 ```js
 var Local = require('local')
-
 var local = new Local()
-	local.set('hello').to('hola').in('spanish')
-	local.get('hello').in('spanish') // -> hola
+
+local.set('hello').to('hola').in('spanish')
+     .then(success)
+     .catch(error)
+	  
+local.get('hello').in('spanish')
+     .then(success)
+     .catch(error) 
 ```
 
 ## Install
@@ -30,7 +35,15 @@ var local = new Local()
 
 ### Set
 **API**
-> local.set(*originValue*).to(*translatedValue*).in(*language*)
+
+```js
+local
+.set($originValue)
+.to($translatedValue)
+.in($language)
+.then($successCallback) 
+.catch($errorCallback)
+```
 
 **Example**
 ```js
@@ -38,22 +51,24 @@ local
 .set('hello')
 .to('hola')
 .in('spanish')
-.then(successCallback) // one result argument
-.catch(errorCallback) // one error argument
+.then(function(entry){
+	console.log(entry)
+}) // one result argument
+.catch(function(error){
+	console.error(error)
+}) // one error argument
 ```
 
 ### Get
 
 **API**
-> local.set(*query*).in(*language*)
+```js
+local.get($query).in($language)
+```
 
 **Example**
 ```js
-local
-.get('hello')
-.in('spanish')
-.then(successCallback) // one result argument
-.catch(errorCallback) // one error argument
+local.get('hello').in('spanish') // -> hola
 ```
 
 ### Locale
