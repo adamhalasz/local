@@ -69,8 +69,8 @@ local
 .set('hello')
 .to('hola')
 .in('spanish')
-.then(function(entry){
-	console.log(entry)
+.then(function(value){
+	console.log(value)
 }) // one result argument
 .catch(function(error){
 	console.error(error)
@@ -92,13 +92,22 @@ local.get('hello').in('spanish') // -> hola
 ### Locale
 
 **API**
-> var locale = local.locale(*language*)
-> locale(*query*)
+```
+var locale = local.locale($language)
+    locale($query).then($successCallback).catch($errorCallback)
+```
 
 **Example**
 ```js
 var spanish = local.locale('spanish')
-spanish('hello') // -> hola
+
+spanish('hello').then(function(value){ 
+	console.log(value)  // -> hola
+	
+}).catch(function(error){
+	console.error(error)
+	
+}) 
 ```
 
 ### Storage
@@ -110,7 +119,7 @@ var local = new Local()
 
 // fileSystem
 var local = new Local()
-local.storeTo('fileSystem', '/your/custom/path/local.json')
+    local.storeTo('fileSystem', '/your/custom/path/local.json')
 ```
 
 #### Custom Storage
