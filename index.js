@@ -9,27 +9,16 @@
 			'memory': require('./drivers/memory'),
 			'fileSystem': require('./drivers/fileSystem')
 		};
+	} else {
+		console.warn('Browser not supported yet.');
 	}
 
 
 // ====================================================
-//  Initialize
+//  Main Class
 // ====================================================
 	
-	function Local(source){
-		
-		if(!source || typeof source == 'object'){
-			this._storage = 'memory';
-			this.memory = source;
-			
-		} else if (typeof source == 'string') {
-			this._storage = 'fileSystem';
-			this.path = source;
-			
-		} else {
-			throw new Error('Undefined source type')
-		}
-		
+	function Local(){
 		return this;
 	}
 	
@@ -41,55 +30,6 @@
 	Local.prototype.memory = {};
 	Local.prototype._readyCallback = false;
 	Local.prototype.storages = {};
-	Local.prototype._initialize = function(){
-		var local = this;
-		this._driver = drivers[local._storage](local);
-		if(local._readyCallback){
-			
-			// start with an empty memory
-			if(this._storage == 'memory'){
-				if(!local.memory) local.memory = {};
-				local._readyCallback(local.memory)
-				
-			// read from file system
-			} else if (this._storage == 'fileSystem' && fs) {
-				var fileContents;
-				async.series([ readFile, updateMemory ], local._readyCallback)
-				
-				function readFile(done){
-					fs.readFile(local.path, function(error, response){
-						if(error && error.code == 'ENOENT'){
-							fileContents = '{}';
-							fs.writeFile(local.path, fileContents, function(error){
-								if(error) throw error;
-								done()
-							})
-						} else {
-							fileContents = response;
-							done()
-						}
-					})
-				}
-				
-				function updateMemory(done){
-					if(fileContents){
-						local.memory = JSON.parse(fileContents);
-						local._readyCallback(local.memory)
-					} else {
-						throw new Error('No fileContents from localization file at ' + local.path)
-					}
-				}
-				
-			} else {
-				throw new Error('Invalid storage mechanism');
-			}
-			
-		} else {
-			throw new Error('Ready was not defined')
-		}
-		
-		return local;
-	}
 
 // ====================================================
 //  Storage
@@ -112,9 +52,34 @@
 		this.parent._init = callback;
 		return this;
 	}
-	Local.prototype.storage = function LocalStorage(storageName){
+	Local.prototype.storage = function storageDriver(storageName){
 		return new Storage(storageName, this)
 	}
+	Local.prototype._storeTo;
+	Local.prototype.storeTo = function storageChoose(storageName, options){
+		var scope = this;
+		
+		if(typeof storageName == 'string') {
+			scope._storage = storageName;
+		} else {
+			scope._storage = 'custom';
+		}
+		
+		scope._storeTo = function(done){
+			if(storageName == 'fileSystem' || storageName == 'memory'){
+				drivers[storageName](scope, options, done)
+			
+			} else if (typeof storageName == 'function') {
+				storageName(scope, options, done)
+			
+			} else if (typeof options == 'function') {
+				options(scope, options, done)
+			}
+			return scope;
+		}
+		return scope;
+	}
+	
 	
 // ====================================================
 //  Set
@@ -230,8 +195,10 @@
 // ====================================================
 	
 	Local.prototype.ready = function(callback){
-		this._readyCallback = callback;
-		this._initialize.apply(this)
+		var scope = this;
+		scope._readyCallback = callback;
+		if(!scope._storeTo) scope.storeTo('memory') 
+		scope._storeTo(callback)
 	}
 	
 	Local.prototype.set = function(query){

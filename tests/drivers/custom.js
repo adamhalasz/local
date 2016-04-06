@@ -1,6 +1,6 @@
 module.exports = function(Local, options, finish){
 
-	var storage = Local.storage('memory');
+	var storage = Local.storage('customDriver')
 	
 	storage.setter(function(parent, query, language, translation, done){
 		// get query from memory

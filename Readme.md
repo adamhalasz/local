@@ -23,37 +23,8 @@ npm install local
 ## How to Use
 
 ### Initialize
-
-#### With Memory Storage
 ```js
 var Local = require('local')
-var local = new Local() // leave it empty
-```
-
-#### With FileSystem Storage
-```js
-var Local = require('local')
-var local = new Local('/your/file/local.json')
-```
-
-#### With Custom Storage
-```js
-var Local = require('local')
-
-// register custom storage
-Local
-.storage('myStorage')
-.getter(function(parent, query, language, translation, done){
-	// ...
-	done()
-})
-.setter(function(parent, query, language, done){
-	// ...
-	done()
-})
-
-// instantiate
-var local = new Local('myStorage')
 ```
 
 ### Set
@@ -74,6 +45,46 @@ local
 .then(successCallback) // one result argument
 .catch(errorCallback) // one error argument
 ```
+
+### Locale
+```js
+var locale = local.locale('spanish')
+locale('hello') -> hola
+```
+
+### Storage
+#### Use Memory Storage
+Memory is always used.
+```js
+var local = new Local() 
+```
+
+#### Use FileSystem Storage
+```js
+var local = new Local() // first argument should be a path
+	local.storeTo('fileSystem', '/your/file/local.json')
+```
+
+#### Use Custom Storage
+```js
+// register custom storage
+Local
+.storage('myStorage')
+.init(function(done){
+	// ...
+})
+.getter(function(parent, query, language, translation, done){
+	// ...
+})
+.setter(function(parent, query, language, done){
+	// ...
+})
+
+// instantiate
+var local = new Local()
+	local.storeTo('myStorage') // first argument is not empty but not a path
+```
+
 
 
 ## Tests
