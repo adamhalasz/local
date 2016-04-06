@@ -92,7 +92,7 @@ local.get('hello').in('spanish') // -> hola
 ### Locale
 
 **API**
-```
+```js
 var locale = local.locale($language)
     locale($query).then($successCallback).catch($errorCallback)
 ```
